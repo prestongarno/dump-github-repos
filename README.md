@@ -1,2 +1,3 @@
 # dump-github-repos
-save all of your github repositories locally
+
+Usage: `dump-github-repos --AUTH_TOKEN=[Github authorization token here] --out=[path to directory here]`
