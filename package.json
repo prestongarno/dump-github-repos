@@ -1,0 +1,13 @@
+{
+  "name": "dump-github-repos",
+  "version": "0.0.0",
+  "private": true,
+  "bin": {
+    "dump-github-repos": "./dump-github-repos.js"
+  },
+  "dependencies": {
+    "graphql-client": "^2.0.1",
+    "morgan": "~1.9.0",
+    "request": "^2.87.0"
+  }
+}
