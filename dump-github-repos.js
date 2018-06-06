@@ -66,16 +66,18 @@ let requestOptions = {
 
 let fs = require('fs');
 
-function cloneAllRepos(arrayOfRepos) {
-    arrayOfRepos.forEach(repo => {
+function clone(repo) {
+    return new Promise((res, rej) => {
         console.log(`Attempting to clone '${repo.name}' (${repo.url})`);
         const outdir = require('path').normalize(options.out + '/' + repo.name);
         if (!fs.existsSync(outdir)){
             fs.mkdirSync(outdir);
             let cp = require("child_process");
-            cp.exec("git clone " + repo.url + " " + outdir || '', () => console.log('done.'));
+            cp.exec("git clone " + repo.url + " " + outdir || '', () => {
+                res("Done cloning " + repo.name);
+            });
         } else {
-            console.log("Directory already exists. Skipping...")
+            res(`Directory '${outdir}' already exists. Skipping...`)
         }
     })
 }
@@ -83,10 +85,16 @@ function cloneAllRepos(arrayOfRepos) {
 request.post(requestOptions, function (error, response, body) {
         if (error) failProgram(error.message);
         if (!error && response.statusCode === 200) {
-            cloneAllRepos(body.data.viewer.repositories.nodes);
+            let repos = body.data.viewer.repositories.nodes;
+            if (!repos || repos.length === 0) {
+                failProgram("Didn't get any repositories in the query...")
+            } else {
+                repos.forEach(it => {
+                    clone(it).then(console.log)
+                })
+            }
         } else {
             failProgram("Got HTTP Error code " + response.statusCode)
         }
     }
 );
-
