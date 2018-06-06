@@ -45,7 +45,7 @@ let query = `
 query {
     viewer {
         login
-        repositories(first: 1, isFork: false) {
+        repositories(first: 100, isFork: false) {
             nodes{
               name,
               url
